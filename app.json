@@ -30,6 +30,9 @@
         "projectId": "6e36dcd7-7372-4c28-a7ea-7617e9e8bf29"
       }
     },
-    "owner": "buckerx"
+    "owner": "buckerx",
+    "android": {
+      "package": "com.buckerx.capaiaicaptiongenerator"
+    }
   }
 }
