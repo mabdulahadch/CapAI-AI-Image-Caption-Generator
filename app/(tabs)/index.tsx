@@ -1,229 +1,6 @@
-// import { useState } from 'react';
-// import {
-//   View,
-//   Text,
-//   StyleSheet,
-//   Image,
-//   TouchableOpacity,
-//   ActivityIndicator,
-//   Platform,
-//   ScrollView,
-// } from 'react-native';
-// import * as ImagePicker from 'expo-image-picker';
-// import { MaterialIcons } from '@expo/vector-icons';
-// import generateImageCaption from '../../app/utils/gemini';
-
-// export default function CaptionGenerator() {
-//   const [image, setImage] = useState<string | null>(null);
-//   const [caption, setCaption] = useState<string | null>(null);
-//   const [loading, setLoading] = useState(false);
-
-//   const pickImage = async () => {
-//     const result = await ImagePicker.launchImageLibraryAsync({
-//       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-//       allowsEditing: true,
-//       aspect: [4, 3],
-//       quality: 1,
-//       base64: true,
-//     });
-
-//     if (!result.canceled && result.assets[0].base64) {
-//       setImage(result.assets[0].uri);
-//       setCaption(null);
-//       generateCaption(result.assets[0].base64);
-//     }
-//   };
-
-//   const takePhoto = async () => {
-//     const { status } = await ImagePicker.requestCameraPermissionsAsync();
-//     if (status !== 'granted') {
-//       alert('Sorry, we need camera permissions to make this work!');
-//       return;
-//     }
-
-//     const result = await ImagePicker.launchCameraAsync({
-//       allowsEditing: true,
-//       aspect: [4, 3],
-//       quality: 1,
-//       base64: true,
-//     });
-
-//     if (!result.canceled && result.assets[0].base64) {
-//       setImage(result.assets[0].uri);
-//       setCaption(null);
-//       generateCaption(result.assets[0].base64);
-//     }
-//   };
-
-//   const generateCaption = async (base64Image: string) => {
-//     setLoading(true);
-//     try {
-//       const captionText = await generateImageCaption(base64Image);
-//       setCaption(captionText);
-//     } catch (error) {
-//       console.error('Error generating caption:', error);
-//       setCaption('Error generating caption. Please try again.');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       {!image ? (
-//         <View style={styles.uploadContainer}>
-//           <Text style={styles.title}>AI Image Caption Generator</Text>
-//           <Text style={styles.subtitle}>
-//             Take a photo or upload an image to generate an AI-powered caption
-//           </Text>
-//           <View style={styles.buttonContainer}>
-//             <TouchableOpacity
-//               style={styles.button}
-//               onPress={takePhoto}
-//               disabled={Platform.OS === 'web'}
-//             >
-//               <MaterialIcons name="camera-alt" size={24} color="#2196f3" />
-//               <Text style={styles.buttonText}>Take Photo</Text>
-//             </TouchableOpacity>
-//             <TouchableOpacity style={styles.button} onPress={pickImage}>
-//               <MaterialIcons name="photo-library" size={24} color="#2196f3" />
-//               <Text style={styles.buttonText}>Upload Image</Text>
-//             </TouchableOpacity>
-//           </View>
-//         </View>
-//       ) : (
-
-//           <View style={styles.resultContainer}>
-//             <Image source={{ uri: image }} style={styles.image} />
-//             <ScrollView contentContainerStyle={styles.scrollContainer}>
-//             <View style={styles.captionContainer}>
-//               {loading ? (
-//                 <ActivityIndicator size="large" color="#2196f3" />
-//               ) : (
-//                 <>
-//                   <Text style={styles.captionTitle}>Generated Caption:</Text>
-//                   <Text style={styles.caption}>{caption}</Text>
-//                 </>
-//               )}
-//             </View>
-//             </ScrollView>
-
-//             <TouchableOpacity
-//               style={styles.newImageButton}
-//               onPress={() => {
-//                 setImage(null);
-//                 setCaption(null);
-//               }}
-//             >
-//               <Text style={styles.newImageButtonText}>
-//                 Generate New Caption
-//               </Text>
-//             </TouchableOpacity>
-//           </View>
-//       )}
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   scrollContainer: {
-//     flexGrow: 0,
-//   },
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#ffffff',
-//   },
-//   uploadContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     padding: 20,
-//   },
-//   title: {
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//     color: '#2196f3',
-//     marginBottom: 10,
-//     textAlign: 'center',
-//   },
-//   subtitle: {
-//     fontSize: 16,
-//     color: '#64b5f6',
-//     textAlign: 'center',
-//     marginBottom: 30,
-//   },
-//   buttonContainer: {
-//     flexDirection: 'row',
-//     gap: 20,
-//   },
-//   button: {
-//     backgroundColor: '#e3f2fd',
-//     padding: 15,
-//     borderRadius: 10,
-//     alignItems: 'center',
-//     minWidth: 120,
-//     flexDirection: 'row',
-//     justifyContent: 'center',
-//     gap: 10,
-//     borderWidth: 1,
-//     borderColor: '#bbdefb',
-//   },
-//   buttonText: {
-//     color: '#2196f3',
-//     fontSize: 16,
-//     fontWeight: '600',
-//   },
-//   resultContainer: {
-//     flex: 1,
-//     backgroundColor: '#ffffff',
-//   },
-//   image: {
-//     width: '100%',
-//     height: '50%',
-//     resizeMode: 'contain',
-//   },
-//   captionContainer: {
-//     backgroundColor: '#ffffff',
-//     padding: 20,
-//     margin: 16,
-//     borderRadius: 12,
-//     shadowColor: '#000',
-//     shadowOffset: {
-//       width: 0,
-//       height: 2,
-//     },
-//     shadowOpacity: 0.1,
-//     shadowRadius: 4,
-//     elevation: 3,
-//   },
-//   captionTitle: {
-//     color: '#2196f3',
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//     marginBottom: 10,
-//   },
-//   caption: {
-//     color: '#333',
-//     fontSize: 16,
-//     lineHeight: 24,
-//   },
-//   newImageButton: {
-//     margin: 16,
-//     backgroundColor: '#2196f3',
-//     padding: 15,
-//     borderRadius: 10,
-//     alignItems: 'center',
-//   },
-//   newImageButtonText: {
-//     color: '#ffffff',
-//     fontSize: 16,
-//     fontWeight: '600',
-//   },
-// });
-
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -235,16 +12,37 @@ import {
   ScrollView,
   SafeAreaView,
   StatusBar,
+  ImageBackground,
+  Animated,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import generateImageCaption from '../../app/utils/gemini';
 import { LinearGradient } from 'expo-linear-gradient';
+import {
+  useFonts,
+  Outfit_400Regular,
+  Outfit_700Bold,
+} from '@expo-google-fonts/outfit';
 
 export default function CaptionGenerator() {
   const [image, setImage] = useState<string | null>(null);
-  const [caption, setCaption] = useState<string | null>(null);
+  const [captions, setCaptions] = useState<{ caption: string; style: string }[]>([]);
   const [loading, setLoading] = useState(false);
+
+  let [fontsLoaded] = useFonts({
+    Caveat_Regular: Outfit_400Regular,
+    Caveat_Bold: Outfit_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text style={{ marginTop: 10 }}>Loading Fonts...</Text>
+      </View>
+    );
+  }
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -257,7 +55,7 @@ export default function CaptionGenerator() {
 
     if (!result.canceled && result.assets[0].base64) {
       setImage(result.assets[0].uri);
-      setCaption(null);
+      setCaptions([]);
       generateCaption(result.assets[0].base64);
     }
   };
@@ -278,7 +76,7 @@ export default function CaptionGenerator() {
 
     if (!result.canceled && result.assets[0].base64) {
       setImage(result.assets[0].uri);
-      setCaption(null);
+      setCaptions([]);
       generateCaption(result.assets[0].base64);
     }
   };
@@ -286,11 +84,29 @@ export default function CaptionGenerator() {
   const generateCaption = async (base64Image: string) => {
     setLoading(true);
     try {
-      const captionText = await generateImageCaption(base64Image);
-      setCaption(captionText);
+      const responseText = await generateImageCaption(base64Image);
+
+      // Clean the response string
+      const cleanedResponse = responseText
+        .replace(/```json/g, '') // Remove ```json
+        .replace(/```/g, '') // Remove ```
+        .trim(); // Remove leading/trailing whitespace
+
+      console.log('Cleaned Response:', cleanedResponse);
+
+      // Parse the cleaned JSON string
+      const parsedResponse = JSON.parse(cleanedResponse);
+
+      // Ensure the parsed response has the expected structure
+      if (parsedResponse && Array.isArray(parsedResponse.captions)) {
+        setCaptions(parsedResponse.captions);
+      } else {
+        console.error('Invalid response structure:', parsedResponse);
+        setCaptions([]);
+      }
     } catch (error) {
       console.error('Error generating caption:', error);
-      setCaption('Error generating caption. Please try again.');
+      setCaptions([]);
     } finally {
       setLoading(false);
     }
@@ -300,7 +116,11 @@ export default function CaptionGenerator() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <LinearGradient
-        colors={['#ffffff', '#ffffff', '#ffffff']}
+        colors={[
+          'rgba(218, 213, 235, 0.1)',
+          'rgba(218, 213, 235, 0.1)',
+          'rgba(218, 213, 235, 0.1)',
+        ]}
         style={styles.gradient}
       >
         {!image ? (
@@ -330,27 +150,32 @@ export default function CaptionGenerator() {
               <Image source={{ uri: image }} style={styles.image} />
               <View style={styles.captionContainer}>
                 {loading ? (
-                  <ActivityIndicator size="large" color="#392b6a" />
+                  <ActivityIndicator size="large" color="rgba(57,43,106,0.9)" />
                 ) : (
-                  <>
-                    <Text style={styles.captionTitle}>Generated Caption:</Text>
-                    <Text style={styles.caption}>{caption}</Text>
-                  </>
+                  captions.map((item, index) => (
+                    <View key={index} style={styles.captionBlock}>
+                      <Text style={styles.captionStyle}>{item.style}</Text>
+                      <Text style={styles.caption}>{item.caption}</Text>
+                    </View>
+                  ))
                 )}
               </View>
               <TouchableOpacity
                 style={styles.newImageButton}
                 onPress={() => {
                   setImage(null);
-                  setCaption(null);
+                  setCaptions([]);
                 }}
               >
-                <Ionicons name="logo-closed-captioning" size={26} color="#392b6a" />
+                <Ionicons
+                  name="logo-closed-captioning"
+                  size={24}
+                  color="#ffffff"
+                />
                 <Text style={styles.newImageButtonText}>
                   Generate New Caption
                 </Text>
               </TouchableOpacity>
-
             </View>
           </ScrollView>
         )}
@@ -360,6 +185,26 @@ export default function CaptionGenerator() {
 }
 
 const styles = StyleSheet.create({
+  captionStyle: {
+    fontSize: 14,
+    color: '#392b6a',
+    marginTop: 1,
+    fontFamily: 'Caveat_Bold',
+    textAlign: 'center',
+    marginBottom: 2,
+  },
+  captionBlock: {
+    marginBottom: 10,
+    padding: 10,
+    backgroundColor: 'rgba(218, 213, 235, 0.9)',
+    borderRadius: 3,
+  },
+  caption: {
+    color: '#392b6a',
+    fontSize: 16,
+    lineHeight: 30,
+    fontFamily: 'Caveat_Regular',
+  },
   container: {
     flex: 1,
   },
@@ -376,17 +221,24 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
+    fontSize: 22,
     color: '#392b6a',
-    marginBottom: 10,
-    textAlign: 'center',
+    marginBottom: 20,
+    fontFamily: 'Caveat_Bold',
   },
   subtitle: {
-    fontSize: 16,
-    color: 'rgba(57,43,106, 0.6)',
+    fontSize: 18,
+    color: 'rgba(57,43,106, 0.7)',
     textAlign: 'center',
     marginBottom: 30,
+    fontFamily: 'Caveat_Regular',
+  },
+  designedBy: {
+    fontSize: 16,
+    color: '#392b6a',
+    textAlign: 'center',
+    marginTop: 20,
+    fontFamily: 'Caveat_Bold',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -394,7 +246,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'rgba(57,43,106, 0.2)',
-    padding: 15,
+    padding: 12,
     borderRadius: 10,
     alignItems: 'center',
     minWidth: 140,
@@ -404,36 +256,20 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#392b6a',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
+    fontFamily: 'Caveat_Bold',
   },
   resultContainer: {
     flex: 1,
-    padding: 16,
+    padding: 12,
   },
   image: {
     width: '100%',
     height: 300,
     resizeMode: 'cover',
-    borderRadius: 12,
-    marginBottom: 16,
-    borderColor: 'rgba(57,43,106,0.4)',
-    borderWidth: 1, // Set border width
-    shadowColor: '#000', // Shadow color
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  captionContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.95)', // Slightly increased opacity for better contrast
-    padding: 20,
-    borderRadius: 12, // Slightly increased for smoother corners
-    borderWidth: 1, // Added a light border
-    borderColor: 'rgba(57,43,106,0.4)', // Light gray border for subtle separation
+    borderRadius: 5,
+    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -441,41 +277,26 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 1,
   },
-
-  captionTitle: {
-    color: '#392b6a',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
+  captionContainer: {
+    borderRadius: 5,
   },
-  caption: {
-    color: '#333',
-    fontSize: 16,
-    lineHeight: 24,
-  },
-
   newImageButton: {
-    marginTop: 16,
-    backgroundColor: 'rgba(57,43,106, 0.2)',
-    padding: 15,
-    borderRadius: 12,
+    backgroundColor: 'rgba(57,43,106, 1)',
+    padding: 10,
+    borderRadius: 5,
     alignItems: 'center',
     minWidth: 140,
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 10,
-    borderColor: 'rgba(57,43,106,0.4)',
     borderWidth: 1,
-    shadowColor: "#000",
-
+    borderColor: 'rgba(57,43,106,1)',
   },
-  
-
   newImageButtonText: {
-    color: '#392b6a',
-    fontSize: 16,
+    color: '#ffffff',
+    fontSize: 15,
     fontWeight: '600',
     shadowOffset: {
       width: 0,
@@ -484,5 +305,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    fontFamily: 'Caveat_Bold',
   },
 });

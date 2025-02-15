@@ -7,6 +7,9 @@
     "icon": "./assets/images/appIcon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "assets": [
+      "./assets/fonts/caveat.ttf"
+    ],
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -17,10 +20,12 @@
       "favicon": "./assets/images/appIcon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-font"
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "router": "expo-router"
     },
     "extra": {
       "router": {
