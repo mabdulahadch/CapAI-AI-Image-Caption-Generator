@@ -283,6 +283,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   newImageButton: {
+    marginTop: 10,
     backgroundColor: 'rgba(57,43,106, 1)',
     padding: 10,
     borderRadius: 5,
