@@ -37,7 +37,8 @@
     },
     "owner": "buckerx",
     "android": {
-      "package": "com.buckerx.capaiaicaptiongenerator"
+      "package": "com.buckerx.capaiaicaptiongenerator",
+      "icon": "./assets/images/appIcon.png"
     }
   }
 }
