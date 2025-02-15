@@ -3,8 +3,8 @@ AI image caption generator
 
 
 ---------------------------------------------------------------
-npm install  // install node packages
- // install expo
+npm install      // install node packages
+npm install expo // install expo
 
 
 // install expo go application from Play store / App store 
